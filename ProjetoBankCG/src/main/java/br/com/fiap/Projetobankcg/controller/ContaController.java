@@ -23,6 +23,12 @@ public class ContaController {
 
     private List<Conta> dados = new ArrayList<>();
 
+    //Metodo Get Home
+    @GetMapping("/")
+    public String home(){
+        return "Caike Dametto RM:558614 \nGuilherme Janunzzi RM:558461";
+    }
+
     //Metodo Get
     @GetMapping("/contas")
     public List<Conta> index(){
