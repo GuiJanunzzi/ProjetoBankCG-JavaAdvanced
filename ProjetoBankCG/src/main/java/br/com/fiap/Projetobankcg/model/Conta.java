@@ -5,6 +5,7 @@ import java.util.Random;
 
 public class Conta {
 
+    private Long id;
     private Long numero;
     private int agencia;
     private String nomeTitular;
@@ -14,9 +15,10 @@ public class Conta {
     private boolean ativo;
     private TipoConta tipoConta;
 
-    public Conta(Long numero, int agencia, String nomeTitular, String cpf, LocalDate dataDeAbertura,
+    public Conta(Long id, Long numero, int agencia, String nomeTitular, String cpf, LocalDate dataDeAbertura,
             double saldoinicial, boolean ativo, TipoConta tipoConta) {
-        this.numero = (numero == null)? Math.abs(new Random().nextLong()) : numero;
+        this.id = (id == null)? Math.abs(new Random().nextLong()) : id;
+        this.numero = numero;
         this.agencia = agencia;
         this.nomeTitular = nomeTitular;
         this.cpf = cpf;
@@ -26,6 +28,14 @@ public class Conta {
         this.tipoConta = tipoConta;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+    
     public Long getNumero() {
         return numero;
     }
@@ -89,10 +99,6 @@ public class Conta {
     public void setTipoConta(TipoConta tipoConta) {
         this.tipoConta = tipoConta;
     }
-
-    
-
-    
 }
 
 

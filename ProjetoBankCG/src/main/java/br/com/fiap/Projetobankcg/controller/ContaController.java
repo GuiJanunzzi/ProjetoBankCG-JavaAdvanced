@@ -29,48 +29,60 @@ public class ContaController {
         return "Caike Dametto RM:558614 \nGuilherme Janunzzi RM:558461";
     }
 
-    //Metodo Get
+    //Metodo GET
     @GetMapping("/contas")
     public List<Conta> index(){
         return dados;
     }
 
-    //Metodo Post
+    //Metodo POST
     @PostMapping("/contas")
     public ResponseEntity<Conta> create(@RequestBody Conta conta){
         dados.add(conta);
         return ResponseEntity.status(201).body(conta);
     }
 
-    //Metodo Get por Conta
-    @GetMapping("/contas/{numero}")
-    public Conta get(@PathVariable Long numero){
-        return getConta(numero);
+    //Metodo GET por ID
+    @GetMapping("/contas/{id}")
+    public Conta getById(@PathVariable Long id){
+        return getConta(id);
     }
 
-    //Metódo Delete 
-    @DeleteMapping("/contas/{numero}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long numero){
-        dados.remove(getConta(numero));
+    //Metodo GET por ID
+    @GetMapping("/contas/cpf/{cpf}")
+    public Conta getByCPF(@PathVariable String cpf){
+        return dados
+        .stream()
+        .filter(c -> c.getCpf().equals(cpf))
+        .findFirst()
+        .orElseThrow(
+            () -> new ResponseStatusException(HttpStatus.NOT_FOUND)
+        );
     }
 
-    //Metodo Edit
-    @PutMapping("/contas/{numero}")
-    public Conta update(@PathVariable Long numero, @RequestBody Conta conta){
+    //Metodo PUT
+    @PutMapping("/contas/{id}")
+    public Conta update(@PathVariable Long id, @RequestBody Conta conta){
 
-        dados.remove(getConta(numero));
-        conta.setNumero(numero);
+        dados.remove(getConta(id));
+        conta.setId(id);
         dados.add(conta);
 
         return conta;
     }
     
 
-    private Conta getConta(Long numero) {
+    //Metódo DELETE 
+    @DeleteMapping("/contas/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id){
+        dados.remove(getConta(id));
+    }
+
+    private Conta getConta(Long id) {
         return dados
         .stream()
-        .filter(c -> c.getNumero().equals(numero))
+        .filter(c -> c.getId().equals(id))
         .findFirst()
         .orElseThrow(
             () -> new ResponseStatusException(HttpStatus.NOT_FOUND)
