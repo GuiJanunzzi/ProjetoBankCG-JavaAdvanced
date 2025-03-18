@@ -11,7 +11,7 @@ public class Conta {
     private String nomeTitular;
     private String cpf;
     private LocalDate dataDeAbertura;
-    private double saldoinicial;
+    private double saldoInicial;
     private boolean ativo;
     private TipoConta tipoConta;
 
@@ -23,7 +23,7 @@ public class Conta {
         this.nomeTitular = nomeTitular;
         this.cpf = cpf;
         this.dataDeAbertura = dataDeAbertura;
-        this.saldoinicial = saldoinicial;
+        this.saldoInicial = saldoinicial;
         this.ativo = ativo;
         this.tipoConta = tipoConta;
     }
@@ -76,12 +76,12 @@ public class Conta {
         this.dataDeAbertura = dataDeAbertura;
     }
 
-    public double getSaldoinicial() {
-        return saldoinicial;
+    public double getSaldoInicial() {
+        return saldoInicial;
     }
 
-    public void setSaldoinicial(double saldoinicial) {
-        this.saldoinicial = saldoinicial;
+    public void setSaldoInicial(double saldoinicial) {
+        this.saldoInicial = saldoinicial;
     }
 
     public boolean isAtivo() {

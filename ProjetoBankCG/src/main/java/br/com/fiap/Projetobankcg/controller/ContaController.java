@@ -1,8 +1,8 @@
 package br.com.fiap.Projetobankcg.controller;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale.Category;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import br.com.fiap.Projetobankcg.model.Conta;
+import br.com.fiap.Projetobankcg.model.TipoConta;
 
 @RestController
 public class ContaController {
@@ -38,6 +39,32 @@ public class ContaController {
     //Metodo POST
     @PostMapping("/contas")
     public ResponseEntity<Conta> create(@RequestBody Conta conta){
+        //Validando se o nome do titular está vazio
+        if (conta.getNomeTitular() == null || conta.getNomeTitular().isEmpty()){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O nome do titular é obrigatório!");
+        }
+
+        //Validando se o CPF do titular está vazio
+        if (conta.getCpf() == null || conta.getCpf().isEmpty()){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O CPF do titular é obrigatório!");
+        }
+
+        //Validando se a data de abertura está no futuro
+        if (conta.getDataDeAbertura() != null && conta.getDataDeAbertura().isAfter(LocalDate.now())){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A data de abertura não pode ser no futuro!");
+        }
+
+        //Validando se o saldo inicial é negativo
+        if (conta.getSaldoInicial() < 0){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O saldo inicial não pode ser negativo!");
+        }
+
+        //Validando se o tipo de conta é valido
+        if (conta.getTipoConta() == null || !isTipoContaValido(conta.getTipoConta())){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tipo de conta inválido. Deve ser 'Corrente', 'Poupança' ou 'Salario'!");
+        }
+
+        //Adicionando dados depois de validados
         dados.add(conta);
         return ResponseEntity.status(201).body(conta);
     }
@@ -79,6 +106,7 @@ public class ContaController {
         dados.remove(getConta(id));
     }
 
+    //Função para buscar contas no banco por ID
     private Conta getConta(Long id) {
         return dados
         .stream()
@@ -89,6 +117,11 @@ public class ContaController {
         );
 
     }
+
+    //Função para validar se o tipo de conta é valido
+    private boolean isTipoContaValido(TipoConta tipoConta) {
+    return tipoConta == TipoConta.Corrente || tipoConta == TipoConta.Poupanca || tipoConta == TipoConta.Salario;
+}
 
     
 
