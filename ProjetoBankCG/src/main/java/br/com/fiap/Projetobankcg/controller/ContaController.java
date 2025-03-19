@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import br.com.fiap.Projetobankcg.model.Conta;
+import br.com.fiap.Projetobankcg.model.Pix;
 import br.com.fiap.Projetobankcg.model.TipoConta;
 import br.com.fiap.Projetobankcg.model.Transacao;
 
@@ -142,6 +143,26 @@ public class ContaController {
 
         return ResponseEntity.ok(conta);
     }
+
+    //Metodo PIX
+    @PostMapping("/contas/pix")
+    public ResponseEntity<Conta> realizarPix(@RequestBody Pix pix){
+        if (pix.getValor() <= 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O valor do PIX não pode ser zero ou negativo!");
+        }
+
+        Conta contaOrigem = getConta(pix.getIdContaOrigem());
+        Conta contaDestino = getConta(pix.getIdContaDestino());
+
+        if (contaOrigem.getSaldoInicial() < pix.getValor()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Saldo insulficiente!");
+        }
+
+        contaOrigem.setSaldoInicial(contaOrigem.getSaldoInicial() - pix.getValor());
+        contaDestino.setSaldoInicial(contaDestino.getSaldoInicial() + pix.getValor());
+
+        return ResponseEntity.ok(contaOrigem);
+    } 
 
     //Função para buscar contas no banco por ID
     private Conta getConta(Long id) {
