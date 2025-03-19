@@ -18,6 +18,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import br.com.fiap.Projetobankcg.model.Conta;
 import br.com.fiap.Projetobankcg.model.TipoConta;
+import br.com.fiap.Projetobankcg.model.Transacao;
 
 @RestController
 public class ContaController {
@@ -106,6 +107,42 @@ public class ContaController {
         dados.remove(getConta(id));
     }
 
+    //Método para depositar
+    @PostMapping("/contas/depositar")
+    public ResponseEntity<Conta> depositar(@RequestBody Transacao transacao){
+
+        if(transacao.getValor() <= 0){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O valor da transação não pode ser zero ou negativo!");
+        }
+
+        //Buscando conta pelo ID
+        Conta conta = getConta(transacao.getIdConta());
+
+        //Atualizando o saldo da conta
+        conta.setSaldoInicial(conta.getSaldoInicial() + transacao.getValor());
+
+        return ResponseEntity.ok(conta);
+    }
+
+    //Metodo para sacar
+    @PostMapping("/contas/sacar")
+    public ResponseEntity<Conta> sacar(@RequestBody Transacao transacao){
+
+        if(transacao.getValor() <= 0){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O valor da transação não pode ser zero ou negativo!");
+        }
+
+        Conta conta = getConta(transacao.getIdConta());
+
+        if(conta.getSaldoInicial() < transacao.getValor()){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Saldo insulficiente!");
+        }
+
+        conta.setSaldoInicial(conta.getSaldoInicial() - transacao.getValor());
+
+        return ResponseEntity.ok(conta);
+    }
+
     //Função para buscar contas no banco por ID
     private Conta getConta(Long id) {
         return dados
@@ -121,10 +158,5 @@ public class ContaController {
     //Função para validar se o tipo de conta é valido
     private boolean isTipoContaValido(TipoConta tipoConta) {
     return tipoConta == TipoConta.Corrente || tipoConta == TipoConta.Poupanca || tipoConta == TipoConta.Salario;
-}
-
-    
-
-
-
+    }
 }
