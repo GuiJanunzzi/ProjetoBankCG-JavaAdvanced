@@ -17,7 +17,7 @@ public class Conta {
 
     public Conta(Long id, Long numero, int agencia, String nomeTitular, String cpf, LocalDate dataDeAbertura,
             double saldoinicial, boolean ativo, TipoConta tipoConta) {
-        this.id = (id == null)? Math.abs(new Random().nextLong()) : id;
+        this.id = (id == null) ? Math.abs(new Random().nextLong()) : id;
         this.numero = numero;
         this.agencia = agencia;
         this.nomeTitular = nomeTitular;
@@ -35,7 +35,7 @@ public class Conta {
     public void setId(Long id) {
         this.id = id;
     }
-    
+
     public Long getNumero() {
         return numero;
     }
@@ -100,5 +100,3 @@ public class Conta {
         this.tipoConta = tipoConta;
     }
 }
-
-
